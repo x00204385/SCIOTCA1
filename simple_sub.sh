@@ -23,9 +23,6 @@ mosquitto_sub -v -h localhost -t /simpletest/# | while read line; do
         *)
             echo Received bad data
             ;;
-        *)
-            echo Received bad data
-            ;;
         esac
         ;;
     esac

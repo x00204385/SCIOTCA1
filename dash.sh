@@ -1,10 +1,8 @@
 while true; do
     clear
-    cat dash-header
-    cat dash-carriage[0-9]
-    cat dash-footer
+    cat dash-header dash-carriage[0-9] dash-footer
     if [ -f driver.log ]; then
-        tail -3 driver.log
+        cat driver.log
     fi
     sleep 5
 done
