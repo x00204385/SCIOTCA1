@@ -27,20 +27,30 @@ log_message() {
     mv $temp_file $log_file
 }
 
-# brake_on $
-
+#
+# Usage: brake_on carriage
+# Turn brakes ON in carriage and log a message
+#
 brake_on() {
     log_message "Brakes ON in carriage $1"
     mosquitto_pub -h localhost -t "/carriage/$1/brake" -m "ON"
     echo "carriage$1: ON" >dash-carriage$1
 }
 
+#
+# Usage: brake_off carriage
+# Turn brakes OFF in carriage and log a message
+#
 brake_off() {
     log_message "Brakes OFF in carriage $1"
     mosquitto_pub -h localhost -t "/carriage/$1/brake" -m "OFF"
     echo "carriage$1: OFF" >dash-carriage$1
 }
 
+#
+# Usage: apply_brake carriage
+# Turn the brake ON in carriage, wait the configured number of seconds and turn the brake OFF again
+#
 apply_brake() {
     brake_on $1
     sleep $brake_duration
@@ -51,7 +61,7 @@ apply_brake() {
 brake_off 1
 brake_off 2
 
-# Listen for messages from carriages in the background
+# Listen for messages from carriages (in the background)
 
 mosquitto_sub -v -h localhost -t "/carriage/+/message" | while read line; do
     carriage_number=$(echo $line | cut -f 3 -d'/')
@@ -62,6 +72,5 @@ done &
 mosquitto_sub -v -h localhost -t "/carriage/+/apply_brake" | while read line; do
     log_message $line
     carriage_number=$(echo $line | cut -f 3 -d'/')
-    echo Carriage number is $carriage_number
     apply_brake $carriage_number
 done
