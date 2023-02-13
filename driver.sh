@@ -1,5 +1,20 @@
 #!/bin/bash
 #
+# driver.sh
+# DESCRIPION
+# This script implements the functions of the driver system for the bash MQTT train intercomm system
+# The script subscribes to a number of MQTT topics and responds if a message is received. Messages received are logged to a
+# log file which is truncated to a configureable maximum number of lines.
+#
+# The main messages which are processed:
+#
+# 1. Brake activiation messages from carriages.
+# The brakes set to ON when a message is received. After a configurable period the brakes are restored to OFF. MQTT are posted when
+# messages brakes are turned OFF or ON
+#
+# 2. Messages from carriagse
+# The messages are logged in the log file
+#
 brake_duration=10
 log_file_maxlen=20
 temp_file=/tmp/$$temp.txt
@@ -11,6 +26,8 @@ log_message() {
     tail -n $log_file_maxlen $log_file >$temp_file
     mv $temp_file $log_file
 }
+
+# brake_on $
 
 brake_on() {
     log_message "Brakes ON in carriage $1"
