@@ -8,17 +8,10 @@
 #
 # The main messages which are processed:
 #
-# 1. Brake activiation messages from carriages.
+# 1. Apply brake messages from carriages.
 # The brakes set to ON when a message is received. After a configurable period the brakes are restored to OFF. MQTT are posted when
 # messages brakes are turned OFF or ON
 #
-# 2. Messages from carriagse
-# The messages are logged in the log file
-#
-# Menu setup
-menu_options=("Message to carriages")
-menu_title="Driver menu "
-menu_prompt="Menu choice: "
 
 brake_duration=10
 log_file_maxlen=20
@@ -65,48 +58,16 @@ apply_brake() {
     brake_off $1
 }
 
-send_driver_message() {
-    read -p "$driver_message_prompt" driver_message
-    mosquitto_pub -h $mqtt_host -t "/driver/broadcast" -m "$driver_message"
-}
-
 # Ensure brakes are off
 brake_off 1
 brake_off 2
-
-# Listen for messages from carriages (in the background)
-
-mosquitto_sub -v -h $mqtt_host -t "/carriage/+/message" | while read line; do
-    carriage_number=$(echo $line | cut -f 3 -d'/')
-    log_message "Message received from carriage $carriage_number" $line
-done &
 
 # Subscribe to message feed for brake activations
 mosquitto_sub -v -h $mqtt_host -t "/carriage/+/apply_brake" | while read line; do
     log_message $line
     carriage_number=$(echo $line | cut -f 3 -d'/')
     apply_brake $carriage_number
-done &
+done
 
 # Kill background processes on exit
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-#
-
-# Display a menu of available options and ask the user to choose
-#
-PS3=$menu_prompt
-echo $menu_title
-select menu_item in "${menu_options[@]}" "Quit"; do
-    case $menu_item in
-    "Message to carriages")
-        send_driver_message
-        ;;
-    "Quit")
-        echo Goodbye
-        break
-        ;;
-    *)
-        echo "Invalid option. Please choose a valid option"
-        ;;
-    esac
-done

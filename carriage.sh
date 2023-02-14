@@ -14,6 +14,7 @@
 # publishing messages to an MQTT topic to send messages and subscribing to an MQTT topic to receive messages.
 #
 carriage_number=${1:-"1"} # What carriage number are we? Default to 1
+mqtt_host=localhost
 # Menu setup
 menu_options=("Apply brake" "Send message")
 menu_title="Select an option "
@@ -26,7 +27,7 @@ driver_message_prompt="Enter message for driver: "
 #
 send_message() {
     read -p "$driver_message_prompt" driver_message
-    mosquitto_pub -h localhost -t "/carriage/$carriage_number/message" -m "$driver_message"
+    mosquitto_pub -h $mqtt_host -t "/carriage/$carriage_number/message" -m "$driver_message"
 }
 
 # Usage: apply_brake
@@ -34,10 +35,24 @@ send_message() {
 #
 apply_brake() {
     echo "activating brake"
-    mosquitto_pub -h localhost -t "/carriage/$carriage_number/apply_brake" -m "activate"
+    mosquitto_pub -h $mqtt_host -t "/carriage/$carriage_number/apply_brake" -m "activate"
 }
 
 echo "Carriage number is " $carriage_number
+
+# Subscribe to broadcast messages from driver
+#
+mosquitto_sub -h $mqtt_host -t "/driver/message/broadcast" | while read line; do
+    # Display the message received to the user
+    echo
+    echo Message received from driver: $line
+done &
+
+mosquitto_sub -h $mqtt_host -t "/driver/messsage/$carriage_number" | while read line; do
+    # Display the message received to the user
+    echo
+    echo Message received from driver: $line
+done &
 
 # Display a menu of available options and ask the user to choose
 #
