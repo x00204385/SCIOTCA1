@@ -6,8 +6,8 @@
 # The main messages which are processed:
 #
 # 1. Emergency brake handle.
-# Each carriage has an emergencyu brake handle that allowa a passenger to requiest the cdirver system
-# to activate the brakes. This is implemented by sending an MQTT message to a topic requesting that the brakes are activiated.
+# Each carriage has an emergency brake handle that allows a passenger to request the driver system
+# to activate the brakes. This is implemented by sending an MQTT message to a topic requesting that the brakes be activated.
 #
 # 2. Messages to driver
 # Each carriage has a system to allow a passenger to send and receive brief text messages to and from the driver. This is implemented by
@@ -15,7 +15,9 @@
 #
 carriage_number=${1:-"1"} # What carriage number are we? Default to 1
 mqtt_host=localhost
+
 # Menu setup
+#
 menu_options=("Apply brake" "Send message")
 menu_title="Select an option "
 menu_prompt="Menu choice: "
@@ -40,19 +42,20 @@ apply_brake() {
 
 echo "Carriage number is " $carriage_number
 
+#
 # Subscribe to broadcast messages from driver
 #
 mosquitto_sub -h $mqtt_host -t "/driver/message/broadcast" | while read line; do
     # Display the message received to the user
     echo
     echo Message received from driver: $line
-done &
+done & # Run in the background
 
 mosquitto_sub -h $mqtt_host -t "/driver/messsage/$carriage_number" | while read line; do
     # Display the message received to the user
     echo
     echo Message received from driver: $line
-done &
+done & # Run in the background
 
 # Display a menu of available options and ask the user to choose
 #
