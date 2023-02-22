@@ -1,0 +1,13 @@
+# Send message to driver
+#
+/driver/message
+#
+#
+# Send message to carriage
+#
+/carriage/message -m message
+# Request to activate brake
+#
+/carriage/n/brake -m ON
+#
+# 
