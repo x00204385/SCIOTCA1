@@ -20,3 +20,35 @@ docker run -it image_id bash
 
 If they are still there then run them. Find them using docker images. :wq
 
+
+DRIVER SYSTEM
+
+docker run -it ubuntu:focal bash
+In the container:
+apt update -y
+apt install mosquitto mosquitto-clients -y
+service mosquitto start
+mkdir SCIOT
+apt install git -y
+apt install net-tools iputils-ping -y
+cd SCIOT/SCIOTCA1/Driver
+./driver_brakes.sh -h 172.18.0.2
+Create new windows on the same container.
+docker exec -it ded bash
+./driver_messaging -h 172.18.0.2
+
+
+CARRIAGE SYSTEM
+docker run -it ubuntu:focal bash
+apt install mosquitto-clients -y
+mkdir SCIOT
+apt install git -y
+apt install net-tools iputils-ping -y
+cd SCIOT/SCIOTCA1/Carriage
+git clone https://github.com/x00204385/SCIOTCA1.git
+
+EXPORT THE DOCKER IMAGES
+docker export -o carriage.docker 98e4288b
+docker import carriage.docker
+docker run -it 644119f bash
+
