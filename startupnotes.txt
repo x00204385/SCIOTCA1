@@ -1,0 +1,22 @@
+To startup, run the following in terminal windows:
+* carriage.sh. Run with the number of the carriage you want to be.
+* dash.sh. Displays driver dashboard.
+* driver_brakes.sh. Manages brake activation. Doesn't need to be foreground.
+* Manages driver messaging functionality.
+
+On the Google cloud system, 
+
+docker run –it ubuntu bash
+
+Two containers are exported. 
+driver.docker
+carriage.docker.
+
+
+To activate, 
+
+docker import <image>
+docker run -it image_id bash
+
+If they are still there then run them. Find them using docker images. :wq
+
