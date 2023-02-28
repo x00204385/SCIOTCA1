@@ -1,6 +1,9 @@
 #!/bin/bash
 #
-# driver.sh
+# driver_messaging.sh
+# USAGE
+# driver_messaging [-h mqtt_host] [-l log_file_maxlen]
+#
 # DESCRIPION
 # This script implements the functions of the driver system for the bash MQTT train intercomm system
 # The script subscribes to a number of MQTT topics and responds if a message is received. Messages received are logged to a
@@ -19,6 +22,28 @@
 #
 mqtt_host="${MQTT_HOST:-localhost}" # Set mqtt_host based on environment variable. Default to localhost
 log_file_maxlen=20
+#
+# Process command line options
+#
+while getopts "h:l:" OPTION; do
+    case $OPTION in
+    l)
+        log_file_maxlen=$OPTARG
+        ;;
+    h)
+        mqtt_host=$OPTARG
+        ;;
+    *)
+        echo "Usage: $(basename $0) [-h mqtt_host] [-l log_file_maxlen]"
+        exit 1
+        ;;
+    esac
+done
+#
+echo mqtt_host is $mqtt_host
+echo log_file_maxlen is $log_file_maxlen
+#
+#
 driver_message_prompt="Enter message for carriages: "
 #
 # Menu setup
@@ -60,7 +85,11 @@ send_message_to_carriage() {
             ;;
         esac
     done
+    # Read user input
     read -p "$driver_message_prompt" driver_message
+    #
+    # Post the message by publishing to MQTT topic
+    #
     mosquitto_pub -h $mqtt_host -t "/driver/messsage/$num" -m "$driver_message"
 }
 

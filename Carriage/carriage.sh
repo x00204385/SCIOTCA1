@@ -1,5 +1,8 @@
 #!/bin/bash
 #
+# USAGE
+# carriage [-h mqtt_host] [-c carriage_number]
+#
 # DESCRIPION
 # This script implements the functions of the carriage system for the bash MQTT train intercomm system
 #
@@ -13,11 +16,28 @@
 # Each carriage has a system to allow a passenger to send and receive brief text messages to and from the driver. This is implemented by
 # publishing messages to an MQTT topic to send messages and subscribing to an MQTT topic to receive messages.
 #
-carriage_number=${1:-"1"} # What carriage number are we? Default to 1
-echo "Carriage number is " $carriage_number
+carriage_number=1 # What carriage number are we? Default to 1
 
 mqtt_host="${MQTT_HOST:-localhost}" # Set mqtt_host based on environment variable. Default to localhost
 
+while getopts "h:c:" OPTION; do
+    case $OPTION in
+    c)
+        carriage_number=$OPTARG
+        ;;
+    h)
+        mqtt_host=$OPTARG
+        ;;
+    *)
+        echo "Usage: $(basename $0) [-h mqtt_host] [-c carriage_number]"
+        exit 1
+        ;;
+    esac
+done
+#
+#
+echo "Carriage number is " $carriage_number
+echo "MQTT host IS " $mqtt_host
 #
 # Menu setup
 #
