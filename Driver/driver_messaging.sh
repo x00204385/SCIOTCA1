@@ -15,14 +15,17 @@
 # 2. Messages from carriagse
 # The messages are logged in the log file
 #
+# Setup some variables
+#
+mqtt_host="${$MQTT_HOST:-localhost}" 		# Set mqtt_host based on environment variable. Default to localhost
+log_file_maxlen=20
+driver_message_prompt="Enter message for carriages: "
+#
 # Menu setup
 menu_options=("Broadcast to carriages" "Direct message to carriage")
 menu_title="Driver menu "
 menu_prompt="Menu choice: "
 
-log_file_maxlen=20
-mqtt_host=localhost
-driver_message_prompt="Enter message for carriages: "
 
 temp_file=/tmp/$$temp.txt
 
