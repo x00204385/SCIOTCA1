@@ -31,6 +31,8 @@ service mosquitto start
 mkdir SCIOT
 apt install git -y
 apt install net-tools iputils-ping -y
+apt install vim -y
+git clone https://github.com/x00204385/SCIOTCA1.git
 cd SCIOT/SCIOTCA1/Driver
 ./driver_brakes.sh -h 172.18.0.2
 Create new windows on the same container.

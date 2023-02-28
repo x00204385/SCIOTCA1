@@ -68,6 +68,7 @@ log_message() {
 broadcast_message_to_carriages() {
     read -p "$driver_message_prompt" driver_message
     mosquitto_pub -h $mqtt_host -t "/driver/message/broadcast" -m "$driver_message"
+    log_message "Broadcast /driver/message/broadcast  " $driver_message " to all carriages"
 }
 
 #
