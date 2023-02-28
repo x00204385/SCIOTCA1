@@ -15,7 +15,7 @@
 
 brake_duration=10
 log_file_maxlen=20
-mqtt_host="${$MQTT_HOST:-localhost}" 		# Set mqtt_host based on environment variable. Default to localhost
+mqtt_host="${MQTT_HOST:-localhost}" # Set mqtt_host based on environment variable. Default to localhost
 driver_message_prompt="Enter message for carriages: "
 
 temp_file=/tmp/$$temp.txt

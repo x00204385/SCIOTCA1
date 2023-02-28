@@ -17,7 +17,7 @@
 #
 # Setup some variables
 #
-mqtt_host="${$MQTT_HOST:-localhost}" 		# Set mqtt_host based on environment variable. Default to localhost
+mqtt_host="${MQTT_HOST:-localhost}" # Set mqtt_host based on environment variable. Default to localhost
 log_file_maxlen=20
 driver_message_prompt="Enter message for carriages: "
 #
@@ -25,7 +25,6 @@ driver_message_prompt="Enter message for carriages: "
 menu_options=("Broadcast to carriages" "Direct message to carriage")
 menu_title="Driver menu "
 menu_prompt="Menu choice: "
-
 
 temp_file=/tmp/$$temp.txt
 
@@ -37,11 +36,19 @@ log_message() {
     mv $temp_file $log_file
 }
 
+#
+# Usage: broadcast_message_to_carriages message
+# Send a message to all carriages
+#
 broadcast_message_to_carriages() {
     read -p "$driver_message_prompt" driver_message
     mosquitto_pub -h $mqtt_host -t "/driver/message/broadcast" -m "$driver_message"
 }
 
+#
+# Usage: send_message_to_carriage
+# Send a message to specific carriage. Prompt user for detail.
+#
 send_message_to_carriage() {
     select num in "1" "2" "Quit"; do
         case $num in

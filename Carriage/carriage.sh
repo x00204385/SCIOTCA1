@@ -14,8 +14,11 @@
 # publishing messages to an MQTT topic to send messages and subscribing to an MQTT topic to receive messages.
 #
 carriage_number=${1:-"1"} # What carriage number are we? Default to 1
-mqtt_host=localhost
+echo "Carriage number is " $carriage_number
 
+mqtt_host="${MQTT_HOST:-localhost}" # Set mqtt_host based on environment variable. Default to localhost
+
+#
 # Menu setup
 #
 menu_options=("Apply brake" "Send message")
@@ -40,8 +43,6 @@ apply_brake() {
     mosquitto_pub -h $mqtt_host -t "/carriage/$carriage_number/apply_brake" -m "activate"
 }
 
-echo "Carriage number is " $carriage_number
-
 #
 # Subscribe to broadcast messages from driver
 #
@@ -57,6 +58,7 @@ mosquitto_sub -h $mqtt_host -t "/driver/messsage/$carriage_number" | while read 
     echo Message received from driver: $line
 done & # Run in the background
 
+#
 # Display a menu of available options and ask the user to choose
 #
 PS3=$menu_prompt
