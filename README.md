@@ -9,7 +9,7 @@ Implements an MQTT system with bash clients to simulate a train intercom system.
 -  Carriage 1 and Carriage 2. Carriage 1 and Carriage 2 run identical code. A command line argument determines whether the code behaves
 as carriage 1 or carriage 2. Each runs in a separate docker process. 
 
- 
+``` 
                                            ----------------------                                           
                                           |      MQTT           |                                            
                                           |      Broker         |                                            
@@ -28,6 +28,8 @@ as carriage 1 or carriage 2. Each runs in a separate docker process.
      |                       |            |                       |-           |                       |     
      |                       |            |                       |-           |                       |     
      -------------------------            -------------------------            -------------------------     
+
+```
 
 # Starting the system
 
