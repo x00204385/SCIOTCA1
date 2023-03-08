@@ -77,44 +77,6 @@ apply_brake() {
     brake_off $1
 }
 
-# Ensure brakes are off
-brake_off 1
-brake_off 2
-
-# Subscribe to message feed for brake activations
-mosquitto_sub -v -h $mqtt_host -t "/carriage/+/apply_brake" | while read line; do
-    log_message $line
-    carriage_number=$(echo $line | cut -f 3 -d'/')
-    apply_brake $carriage_number
-done &
-
-#
-# Parse command line options
-#
-#
-# Process command line options
-#
-while getopts "h:l:b:" OPTION; do
-    case $OPTION in
-    l)
-        log_file_maxlen=$OPTARG
-        ;;
-    h)
-        mqtt_host=$OPTARG
-        ;;
-    b)
-        brake_duration=$OPTARG
-        ;;
-    *)
-        echo "Usage: $(basename $0) [-h mqtt_host] [-l log_file_maxlen] [-b brake_duration]"
-        exit 1
-        ;;
-    esac
-done
-#
-echo mqtt_host is $mqtt_host
-echo log_file_maxlen is $log_file_maxlen
-
 temp_file=/tmp/$$temp.txt
 log_file="./driver.log"
 log_message() {
@@ -157,6 +119,47 @@ send_message_to_carriage() {
     mosquitto_pub -h $mqtt_host -t "/driver/messsage/$num" -m "$driver_message"
     log_message Driver message to carriage $num: $driver_message
 }
+
+#
+# Parse command line options
+#
+#
+# Process command line options
+#
+while getopts "h:l:b:" OPTION; do
+    case $OPTION in
+    l)
+        log_file_maxlen=$OPTARG
+        ;;
+    h)
+        mqtt_host=$OPTARG
+        ;;
+    b)
+        brake_duration=$OPTARG
+        ;;
+    *)
+        echo "Usage: $(basename $0) [-h mqtt_host] [-l log_file_maxlen] [-b brake_duration]"
+        exit 1
+        ;;
+    esac
+done
+#
+#
+#
+echo mqtt_host is $mqtt_host
+echo log_file_maxlen is $log_file_maxlen
+echo brake_duration is $brake_duration
+
+# Ensure brakes are off
+brake_off 1
+brake_off 2
+
+# Subscribe to message feed for brake activations
+mosquitto_sub -v -h $mqtt_host -t "/carriage/+/apply_brake" | while read line; do
+    log_message $line
+    carriage_number=$(echo $line | cut -f 3 -d'/')
+    apply_brake $carriage_number
+done &
 
 # Listen for messages from carriages (in the background)
 
