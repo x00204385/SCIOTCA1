@@ -33,23 +33,28 @@ as carriage 1 or carriage 2. Each runs in a separate docker process.
 
 # Starting the system
 ## Start driver system
+```
 docker import driver.docker
 docker run -it <sha> bash
 service mosquitto start
 cd /root/SCIOTCA1/Driver
 ./driver_brakes.sh
+```
 
 ## Start carriage system (1)
+```
 docker import carriage.docker
 docker run -it <sha> bash
 cd /root/SCIOT/SCIOTCA1/Carriage
 ./carriage.sh -h 172.18.0.2 -c 1
+```
 
 ## Start carriage system (2)
+```
 docker run -it <sha> bash
 cd /root/SCIOT/SCIOTCA1/Carriage
 ./carriage.sh -h 172.18.0.2 -c 2
-
+```
 
 # MQTT Topics
 
