@@ -3,7 +3,12 @@
 #
 # driver_system.sh
 # USAGE
-# driver_system
+# driver_system.sh [-h mqtt_host] [-l log_file_maxlen] [-b brake_duration]
+#
+# -h mqtt_host. The host running the MQTT broker. Default is localhost.
+# -l log_file_maxlen. Number of lines in the log file.
+# -b brake_duration. Number of seconds for which the brake is kept ON
+#
 # DESCRIPION
 # This script implements the functions of the driver system for the bash MQTT train intercomm system
 # The script subscribes to a number of MQTT topics and responds if a message is received. Messages received are logged to a
@@ -11,12 +16,12 @@
 #
 # The main messages which are processed:
 #
-# 1. Brake activiation messages from carriages.
-# The brakes are set to ON when a message is received. After a configurable period the brakes are restored to OFF. MQTT are posted when
+# 1. Brake activation messages from carriages.
+# The brakes are set to ON when a message is received. After a configurable period the brakes are restored to OFF. MQTT messages are posted when
 # messages brakes are turned OFF or ON
 #
 # 2. Messages from carriages
-# The messages are logged in the log file
+# The messages are displayed on the console and logged in the log file.
 #
 # The script also implements a menu system that gives the driver the option to send messages to the carriages, either
 # broadcast or to a selected carriage. Messages received from carriages are displayed on the terminal and logged to the log file.
@@ -97,8 +102,11 @@ while getopts "h:l:" OPTION; do
     h)
         mqtt_host=$OPTARG
         ;;
+    b)
+        brake_duration=$OPTARG
+        ;;
     *)
-        echo "Usage: $(basename $0) [-h mqtt_host] [-l log_file_maxlen]"
+        echo "Usage: $(basename $0) [-h mqtt_host] [-l log_file_maxlen] [-b brake_duration]"
         exit 1
         ;;
     esac
