@@ -20,10 +20,15 @@ driver_message_prompt="Enter message for carriages: "
 
 temp_file=/tmp/$$temp.txt
 
+#
+# Usage: log_message message
+# Write a message to the log file. Keep the log file truncated
+# to log_file_maxlen lines.
+#
 log_file="./driver.log"
 log_message() {
     echo $(date +"%H:%M:%S") $* >>$log_file
-    # Crop log file to 20 lines max
+    # Crop log file to log_file_maxlen lines max
     tail -n $log_file_maxlen $log_file >$temp_file
     mv $temp_file $log_file
 }
@@ -34,7 +39,7 @@ log_message() {
 #
 brake_on() {
     log_message "Brakes ON in carriage $1"
-    mosquitto_pub -h $mqtt_host -t "/carriage/$1/brake" -m "ON"
+    mosquitto_pub -h $mqtt_host -t "/driver/$1/brake" -m "ON"
     echo "carriage$1: ON" >dash-carriage$1
 }
 
@@ -44,7 +49,7 @@ brake_on() {
 #
 brake_off() {
     log_message "Brakes OFF in carriage $1"
-    mosquitto_pub -h $mqtt_host -t "/carriage/$1/brake" -m "OFF"
+    mosquitto_pub -h $mqtt_host -t "/driver/$1/brake" -m "OFF"
     echo "carriage$1: OFF" >dash-carriage$1
 }
 

@@ -72,10 +72,13 @@ mosquitto_sub -h $mqtt_host -t "/driver/message/broadcast" | while read line; do
     echo Message received from driver: $line
 done & # Run in the background
 
-mosquitto_sub -h $mqtt_host -t "/driver/messsage/$carriage_number" | while read line; do
+#
+# Listen for messages from driver about brakes
+#
+mosquitto_sub -h $mqtt_host -t "/driver/$carriage_number/brake" | while read line; do
     # Display the message received to the user
     echo
-    echo Message received from driver: $line
+    echo Message received from driver: Brake in $carriage_number $line
 done & # Run in the background
 
 #
