@@ -38,6 +38,7 @@ docker import driver.docker
 docker run -it <sha> bash
 service mosquitto start
 cd /root/SCIOTCA1/Driver
+./driver_dash.sh
 ./driver_system.sh -h 172.18.0.2
 ```
 
