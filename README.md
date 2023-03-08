@@ -38,7 +38,7 @@ docker import driver.docker
 docker run -it <sha> bash
 service mosquitto start
 cd /root/SCIOTCA1/Driver
-./driver_brakes.sh
+./driver_system.sh 
 ```
 
 ## Start carriage system (1)
