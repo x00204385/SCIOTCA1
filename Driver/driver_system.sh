@@ -94,7 +94,7 @@ done &
 #
 # Process command line options
 #
-while getopts "h:l:" OPTION; do
+while getopts "h:l:b:" OPTION; do
     case $OPTION in
     l)
         log_file_maxlen=$OPTARG
