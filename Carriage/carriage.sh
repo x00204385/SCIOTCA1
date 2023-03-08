@@ -99,4 +99,9 @@ select menu_item in "${menu_options[@]}" "Quit"; do
         echo "Invalid option. Please choose a valid option"
         ;;
     esac
+    # Trick to refresh menu
+    REPLY=
 done
+
+# Kill background processes on exit
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
