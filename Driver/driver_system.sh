@@ -147,6 +147,7 @@ send_message_to_carriage() {
     # Post the message by publishing to MQTT topic
     #
     mosquitto_pub -h $mqtt_host -t "/driver/messsage/$num" -m "$driver_message"
+    log_message Driver message to carriage $num: $driver_message
 }
 
 # Listen for messages from carriages (in the background)
